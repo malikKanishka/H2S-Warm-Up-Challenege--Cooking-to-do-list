@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking Plan Details - MacroPrep</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-wrapper">
+                <div class="logo-icon">M</div>
+                <div class="logo-text">MacroPrep</div>
+            </div>
+            <div>
+                <a href="/" style="font-weight: 600; font-size: 0.95rem;">← Back to Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Detail Header with title and delete button -->
+        <div class="detail-header">
+            <div>
+                <span class="plan-tag" th:text="${plan.preferences.dietaryGoal}">High Protein</span>
+                <h1 style="font-size: 2.25rem; font-weight: 800; margin-top: 0.5rem; color: #fff;">Daily Cooking To-Do List</h1>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;" 
+                   th:text="'Generated on ' + ${#temporals.format(plan.createdAt, 'dd MMMM yyyy, HH:mm')}">
+                    27 June 2026
+                </p>
+            </div>
+            <div class="detail-actions">
+                <a href="/" class="btn btn-secondary">Dashboard</a>
+                <form th:action="@{/plan/{id}/delete(id=${plan.id})}" method="post">
+                    <button type="submit" class="btn btn-danger">Delete Plan</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- AI Insights Rationale Section -->
+        <section class="ai-insights-panel">
+            <h3><span>🤖</span> AI Plan Insights</h3>
+            <p th:text="${plan.aiInsights}">Plan explanation and AI reasoning details.</p>
+        </section>
+
+        <!-- Budget Feasibility Assessment Banner -->
+        <div class="alert" th:classappend="${plan.budgetAnalysis.isFeasible} ? 'alert-success' : 'alert-warning'">
+            <div class="alert-icon" th:text="${plan.budgetAnalysis.isFeasible} ? '✓' : '⚠'">✓</div>
+            <div>
+                <h4 style="font-weight: 700; margin-bottom: 0.25rem;" 
+                    th:text="${plan.budgetAnalysis.isFeasible} ? 'Budget Status: Feasible' : 'Budget Status: Warning / Adjustments Needed'">
+                    Feasible
+                </h4>
+                <p th:text="${plan.budgetAnalysis.statusMessage}">Budget description details go here.</p>
+            </div>
+        </div>
+
+        <!-- Meals Breakdown -->
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem; color: #fff;">Meal Breakdown & Recipes</h2>
+        <section class="meals-grid">
+            <!-- Breakfast Card -->
+            <div class="meal-card">
+                <div class="meal-tag-banner meal-tag-breakfast">Breakfast</div>
+                <div class="meal-content">
+                    <h3 th:text="${plan.meals.breakfast.name}">Breakfast Name</h3>
+                    <p th:text="${plan.meals.breakfast.description}">Description...</p>
+                    
+                    <div class="macros-wrapper">
+                        <span class="macro-badge macro-cal" th:text="${plan.meals.breakfast.macros.calories} + ' kcal'">Cal</span>
+                        <span class="macro-badge macro-pro" th:text="${plan.meals.breakfast.macros.protein} + 'g P'">Pro</span>
+                        <span class="macro-badge macro-carb" th:text="${plan.meals.breakfast.macros.carbs} + 'g C'">Carb</span>
+                        <span class="macro-badge macro-fat" th:text="${plan.meals.breakfast.macros.fat} + 'g F'">Fat</span>
+                    </div>
+
+                    <h4 style="font-size: 0.9rem; color: #fff; border-bottom: 1px solid var(--border-color); padding-bottom: 0.25rem;">To-Do Steps:</h4>
+                    <ul class="recipe-steps">
+                        <li th:each="step : ${plan.meals.breakfast.steps}" th:text="${step}">Step</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Lunch Card -->
+            <div class="meal-card">
+                <div class="meal-tag-banner meal-tag-lunch">Lunch</div>
+                <div class="meal-content">
+                    <h3 th:text="${plan.meals.lunch.name}">Lunch Name</h3>
+                    <p th:text="${plan.meals.lunch.description}">Description...</p>
+                    
+                    <div class="macros-wrapper">
+                        <span class="macro-badge macro-cal" th:text="${plan.meals.lunch.macros.calories} + ' kcal'">Cal</span>
+                        <span class="macro-badge macro-pro" th:text="${plan.meals.lunch.macros.protein} + 'g P'">Pro</span>
+                        <span class="macro-badge macro-carb" th:text="${plan.meals.lunch.macros.carbs} + 'g C'">Carb</span>
+                        <span class="macro-badge macro-fat" th:text="${plan.meals.lunch.macros.fat} + 'g F'">Fat</span>
+                    </div>
+
+                    <h4 style="font-size: 0.9rem; color: #fff; border-bottom: 1px solid var(--border-color); padding-bottom: 0.25rem;">To-Do Steps:</h4>
+                    <ul class="recipe-steps">
+                        <li th:each="step : ${plan.meals.lunch.steps}" th:text="${step}">Step</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dinner Card -->
+            <div class="meal-card">
+                <div class="meal-tag-banner meal-tag-dinner">Dinner</div>
+                <div class="meal-content">
+                    <h3 th:text="${plan.meals.dinner.name}">Dinner Name</h3>
+                    <p th:text="${plan.meals.dinner.description}">Description...</p>
+                    
+                    <div class="macros-wrapper">
+                        <span class="macro-badge macro-cal" th:text="${plan.meals.dinner.macros.calories} + ' kcal'">Cal</span>
+                        <span class="macro-badge macro-pro" th:text="${plan.meals.dinner.macros.protein} + 'g P'">Pro</span>
+                        <span class="macro-badge macro-carb" th:text="${plan.meals.dinner.macros.carbs} + 'g C'">Carb</span>
+                        <span class="macro-badge macro-fat" th:text="${plan.meals.dinner.macros.fat} + 'g F'">Fat</span>
+                    </div>
+
+                    <h4 style="font-size: 0.9rem; color: #fff; border-bottom: 1px solid var(--border-color); padding-bottom: 0.25rem;">To-Do Steps:</h4>
+                    <ul class="recipe-steps">
+                        <li th:each="step : ${plan.meals.dinner.steps}" th:text="${step}">Step</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grocery List & Substitutions Grid -->
+        <div class="list-grid">
+            <!-- Left Side: Grocery Checklist -->
+            <section class="card">
+                <h2 class="card-title">
+                    <span style="color: var(--accent-teal);">☑</span> Grocery To-Do Shopping List
+                </h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">Check off items as you shop. Costs are estimated based on local rates.</p>
+                
+                <ul class="todo-list">
+                    <li th:each="item : ${plan.groceryList}" class="todo-item">
+                        <label class="todo-checkbox">
+                            <input type="checkbox">
+                            <span th:text="${item.item} + ' (' + ${item.quantity} + ')'">Egg (3 pcs)</span>
+                        </label>
+                        <span class="todo-cost" th:text="'$' + ${#numbers.formatDecimal(item.estimatedCost, 1, 2)}">$1.50</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Right Side: Substitutions Panel -->
+            <section class="card">
+                <h2 class="card-title">
+                    <span style="color: var(--accent-teal);">⇅</span> Ingredient Substitutions
+                </h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">Suggested food swaps to lower costs or adapt to dietary modifications.</p>
+
+                <div th:if="${#lists.isEmpty(plan.substitutions)}" class="empty-state" style="padding: 1.5rem 0;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;">No substitutions needed</h3>
+                    <p>All items align perfectly with standard budget structures and requirements.</p>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(plan.substitutions)}">
+                    <div th:each="sub : ${plan.substitutions}" class="sub-item">
+                        <div class="sub-header">
+                            <span class="sub-original" th:text="${sub.original}">Original Item</span>
+                            <span class="sub-arrow">➔</span>
+                            <span class="sub-alternative" th:text="${sub.alternative}">Alternative</span>
+                        </div>
+                        <p class="sub-reason" th:text="${sub.reason}">Substitution reason.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            &copy; 2026 MacroPrep Cooking Application. Developed using Spring Boot & Thymeleaf.
+        </footer>
+    </main>
+
+</body>
+</html>

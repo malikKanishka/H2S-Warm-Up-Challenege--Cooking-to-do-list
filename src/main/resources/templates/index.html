@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacroPrep - Cooking To-Do & Meal Planner</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-wrapper">
+                <div class="logo-icon">M</div>
+                <div class="logo-text">MacroPrep</div>
+            </div>
+            <div>
+                <a href="/" style="font-weight: 600; font-size: 0.95rem;">Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section class="hero">
+            <h1>Personal AI Cooking To-Do Generator</h1>
+            <p>Generate optimized meal plans, detailed preparation steps, complete grocery lists, and budget assessments in seconds.</p>
+        </section>
+
+        <div class="grid-2">
+            <!-- Left Side: Preference Creation Form -->
+            <section class="card">
+                <h2 class="card-title">
+                    <span style="color: var(--accent-teal);">✦</span> Generate New Plan
+                </h2>
+                <form th:action="@{/generate}" method="post" th:object="${preference}">
+                    <div class="form-group">
+                        <label for="dietaryGoal">Dietary & Macro Goal</label>
+                        <select id="dietaryGoal" th:field="*{dietaryGoal}" class="form-control">
+                            <option value="Balanced">Balanced Diet</option>
+                            <option value="High Protein">High Protein</option>
+                            <option value="Vegan">Vegan (Plant-based)</option>
+                            <option value="Keto">Keto (Low-carb / High-fat)</option>
+                            <option value="Low Cost">Low Cost (Budget Focus)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calorieTarget">Daily Calorie Target (kcal)</label>
+                        <input type="number" id="calorieTarget" th:field="*{calorieTarget}" class="form-control" min="1200" max="5000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxBudget">Daily Budget Limit ($)</label>
+                        <input type="number" id="maxBudget" th:field="*{maxBudget}" class="form-control" min="5" max="200" step="0.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dislikedIngredients">Disliked Ingredients (Comma Separated)</label>
+                        <input type="text" id="dislikedIngredients" name="dislikedIngredientsRaw" class="form-control" placeholder="e.g. Mushrooms, Olives, Bacon">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                        Generate Cooking To-Do List
+                    </button>
+                </form>
+            </section>
+
+            <!-- Right Side: Past Meal Plans List -->
+            <section class="card">
+                <h2 class="card-title">
+                    <span style="color: var(--accent-teal);">☱</span> Saved Meal Plans
+                </h2>
+
+                <div th:if="${#lists.isEmpty(plans)}" class="empty-state">
+                    <div class="empty-state-icon">☕</div>
+                    <h3>No plans generated yet</h3>
+                    <p>Configure your preferences and click generate to build your first cooking checklist!</p>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(plans)}" class="plan-list">
+                    <div th:each="plan : ${plans}" class="plan-item">
+                        <div class="plan-meta">
+                            <a th:href="@{/plan/{id}(id=${plan.id})}">
+                                <h4 th:text="${plan.meals.breakfast.name} + ', ...'">Breakfast Name</h4>
+                            </a>
+                            <p>
+                                <span class="plan-tag" th:text="${plan.preferences.dietaryGoal}">Goal</span>
+                                <span th:text="${#temporals.format(plan.createdAt, 'dd MMM yyyy, HH:mm')}">Date</span>
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; font-size: 1.1rem;" 
+                                 th:classappend="${plan.budgetAnalysis.isFeasible} ? 'macro-pro' : 'macro-fat'"
+                                 th:text="'$' + ${#numbers.formatDecimal(plan.budgetAnalysis.totalCost, 1, 2)}">
+                                $23.50
+                            </div>
+                            <span style="font-size: 0.75rem; color: var(--text-tertiary);"
+                                  th:text="'Budget: $' + ${#numbers.formatDecimal(plan.preferences.maxBudget, 1, 2)}">
+                                Budget: $30.00
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            &copy; 2026 MacroPrep Cooking Application. Developed using Spring Boot & Thymeleaf.
+        </footer>
+    </main>
+
+</body>
+</html>

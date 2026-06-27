@@ -1,0 +1,10 @@
+﻿/target/
+/db.json
+.idea/
+*.class
+*.jar
+*.war
+.project
+.classpath
+.settings/
+*.log
