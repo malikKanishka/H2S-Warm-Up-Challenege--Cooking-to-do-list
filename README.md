@@ -138,11 +138,7 @@ Visual highlights include glassmorphism card effects, hover animations, collapsi
 
 ## 🏆 Built At
 
-**Hack@Skill — Google for Devs Prompt Wars**
-Developed using **Antigravity** as part of a prompt engineering competition showcasing AI-assisted full-stack application development.
+**Hack2Skill — Google for Developers Prompt Wars**
+Developed using **Google Antigravity IDE** as part of a prompt engineering competition showcasing AI-assisted full-stack application development.
 
 ---
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
